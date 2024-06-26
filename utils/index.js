@@ -1,6 +1,9 @@
 const express = require('express');
-const db = require('./config/connection');
-const routes = require('./routes');
+const { connectDB, db } = require('../config/connection');
+
+
+const routes = require('../route');
+
 
 const cwd = process.cwd();
 
@@ -15,6 +18,9 @@ const activity = cwd.includes('01-Activities')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
+
+// Call this function to start the connection process
+connectDB();
 
 db.once('open', () => {
   app.listen(PORT, () => {

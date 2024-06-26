@@ -3,9 +3,11 @@ const thoughtSchema = require('./thought');
 
 // Define a validation function for email addresses
 const validateEmail = function(email) {
-    const re = /^[\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    return re.test(email);
+  const re = /^[\w]+([.-]?[\w]+)*@[\w]+([.-]?[\w]+)*(\.[\w]{2,3})+$/;
+  return re.test(email);
 };
+
+
 
 const userSchema = new Schema(
     {
@@ -22,14 +24,17 @@ const userSchema = new Schema(
         trimmed:true,
         validate: [validateEmail, 'Please provide a valid email address'],
         match: [
-            /^[\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+            /^[\w]+([.-]?[\w]+)*@[\w]+([.-]?[\w]+)*(\.[\w]{2,3})+$/,
             'Please provide a valid email address'
         ]
 
       },
-      thoughts: [thoughtSchema],
+      thoughts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'thought'
+    }],
       
-      friends: [userSchema],
+      friends: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     },
     {
       toJSON: {
@@ -39,13 +44,13 @@ const userSchema = new Schema(
     }
   );
 
-// Create a virtual property `commentCount` that gets the amount of comments per post
-postSchema.virtual('friendCount').get(function () {
+// Create a virtual property `friendsCount` that gets the number of friends
+userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
   });
 
   
-  const User = model('User', userSchema);
+  const user = model('user', userSchema);
   
-  module.exports = User;
+  module.exports = user;
   

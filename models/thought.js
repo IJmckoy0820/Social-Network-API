@@ -19,7 +19,7 @@ const thoughtSchema = new Schema(
         type: String,
         required: true,
       },
-    Reaction: [ reactionSchema ],
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -30,8 +30,8 @@ const thoughtSchema = new Schema(
 );
 
 // Create a virtual property `commentCount` that gets the amount of comments per post
-postSchema.virtual('reactionCount').get(function () {
-    return this.reaction.length;
+thoughtSchema.virtual('reactionCount').get(function () {
+    return this.reactions.length;
   });
 
 const thought= model('thought', thoughtSchema);
